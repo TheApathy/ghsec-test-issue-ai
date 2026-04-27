@@ -1,0 +1,25 @@
+name: Vector - Step Summary Exfil
+on:
+  issues:
+  workflow_dispatch:
+
+jobs:
+  exfil:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Write secret to step summary
+        run: |
+          echo "# Build Results" >> "$GITHUB_STEP_SUMMARY"
+          echo "Secret was: ${{ secrets.FAKE_SECRET }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Token was: ${{ secrets.FAKE_AI_TOKEN }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "--- If secrets appear in the UI summary, this is a leak ---" >> "$GITHUB_STEP_SUMMARY"
+      
+      - name: Also try via env
+        env:
+          SECRET: ${{ secrets.FAKE_WIKI_TOKEN }}
+        run: |
+          echo "Env secret in summary: $SECRET" >> "$GITHUB_STEP_SUMMARY"
+      
+      - name: Report
+        run: echo "Check the 'Summary' tab in the UI for leaked secrets"

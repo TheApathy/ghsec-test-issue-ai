@@ -1,0 +1,20 @@
+name: Vector - Expression Injection
+on:
+  issues:
+
+jobs:
+  inject:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Vulnerable echo (issue title in shell)
+        run: |
+          echo "Issue title: ${{ github.event.issue.title }}"
+          echo "Issue body: ${{ github.event.issue.body }}"
+      
+      - name: Safer approach (env var)
+        env:
+          TITLE: ${{ github.event.issue.title }}
+          BODY: ${{ github.event.issue.body }}
+        run: |
+          echo "Via env (should be safe): $TITLE"
+          echo "Body via env: $BODY"

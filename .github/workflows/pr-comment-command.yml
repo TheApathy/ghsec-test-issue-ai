@@ -1,0 +1,22 @@
+name: Vector - PR Comment Command Trigger
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  parse-command:
+    runs-on: ubuntu-latest
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '/deploy')
+    steps:
+      - name: Echo trigger info
+        run: |
+          echo "Command triggered by: ${{ github.actor }}"
+          echo "Comment: ${{ github.event.comment.body }}"
+          echo "PR: ${{ github.event.issue.number }}"
+          echo "Author association: ${{ github.event.comment.author_association }}"
+      
+      - name: Simulate privileged operation
+        run: |
+          echo "=== This simulates a privileged deployment ==="
+          echo "Secret access test: ${{ secrets.FAKE_SECRET }}"
+          echo "--- If this workflow runs on attacker comment, it's a bypass ---"
