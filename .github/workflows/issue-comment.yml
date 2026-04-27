@@ -1,0 +1,20 @@
+name: Toxic Combo 4 - Issue Comment Trigger
+on:
+  issue_comment:
+    types: [created, edited]
+
+jobs:
+  process-comment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log comment info
+        run: |
+          echo "=== ISSUE COMMENT TRIGGER ==="
+          echo "Event: ${{ github.event_name }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Comment author: ${{ github.event.comment.user.login }}"
+          echo "Comment body: ${{ github.event.comment.body }}"
+          echo "Issue title: ${{ github.event.issue.title }}"
+          echo "Secret present: ${{ secrets.FAKE_SECRET != '' && 'YES' || 'NO' }}"
+          echo "=============================="
