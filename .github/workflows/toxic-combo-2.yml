@@ -1,0 +1,34 @@
+name: Toxic Combo 2 - Multi-Trigger Secrets
+on:
+  issues:
+    types: [opened, edited]
+  pull_request:
+    types: [opened, synchronize]
+  discussion_comment:
+    types: [created, edited]
+
+jobs:
+  process:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log trigger source
+        run: |
+          echo "=== MULTI-TRIGGER SECRETS TEST ==="
+          echo "Event: ${{ github.event_name }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Repo: ${{ github.repository }}"
+          echo "Secret length: ${{ secrets.FAKE_SECRET != '' && 'PRESENT' || 'ABSENT' }}"
+          echo "==================================="
+      - name: Simulate processing
+        run: |
+          if [ "${{ github.event_name }}" = "issues" ]; then
+            echo "Processing issue: ${{ github.event.issue.title }}"
+            echo "Issue body length: ${{ github.event.issue.body != '' && 'HAS_CONTENT' || 'EMPTY' }}"
+          elif [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "Processing PR: ${{ github.event.pull_request.title }}"
+            echo "PR source: ${{ github.event.pull_request.head.repo.full_name }}"
+          elif [ "${{ github.event_name }}" = "discussion_comment" ]; then
+            echo "Processing discussion comment"
+            echo "Comment body length: ${{ github.event.comment.body != '' && 'HAS_CONTENT' || 'EMPTY' }}"
+          fi
