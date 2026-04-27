@@ -1,0 +1,51 @@
+name: Issue AI Test
+
+on:
+  issues:
+    types: [opened, edited]
+  issue_comment:
+    types: [created, edited]
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log trigger info
+        run: |
+          echo "=== ISSUE AI TEST ==="
+          echo "Event: ${{ github.event_name }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Author association: ${{ github.event.issue.author_association }}"
+          echo "Issue title: ${{ github.event.issue.title }}"
+          echo "Issue body: ${{ github.event.issue.body }}"
+          echo "Comment body: ${{ github.event.comment.body }}"
+          echo "Fake token (should be redacted): ${{ secrets.FAKE_AI_TOKEN }}"
+          echo "==========================="
+      
+      - name: Simulate AI processing
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const event = context.payload;
+            console.log('Event type:', context.eventName);
+            console.log('Actor:', context.actor);
+            console.log('Author association:', event.issue?.author_association || event.comment?.author_association);
+            
+            if (event.issue) {
+              console.log('Issue title:', event.issue.title);
+              console.log('Issue body length:', (event.issue.body || '').length);
+            }
+            if (event.comment) {
+              console.log('Comment body length:', (event.comment.body || '').length);
+            }
+            
+            // Check if author is external
+            const assoc = event.issue?.author_association || event.comment?.author_association;
+            console.log('Author is:', assoc);
+            if (assoc === 'NONE' || assoc === 'CONTRIBUTOR') {
+              console.log('⚠️ EXTERNAL USER TRIGGERED WORKFLOW');
+            }
