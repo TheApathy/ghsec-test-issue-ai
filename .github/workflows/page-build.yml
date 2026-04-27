@@ -1,0 +1,15 @@
+name: Vector - Page Build Trigger
+on: [page_build]
+
+jobs:
+  process-page:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log page build info
+        run: |
+          echo "=== PAGE BUILD TRIGGER ==="
+          echo "Event: ${{ github.event_name }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Secret present: ${{ secrets.FAKE_SECRET != '' && 'YES' || 'NO' }}"
+          echo "=========================="

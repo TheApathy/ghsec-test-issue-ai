@@ -1,0 +1,21 @@
+name: Vector - PR Review Trigger
+on:
+  pull_request_review:
+    types: [submitted, edited]
+
+jobs:
+  process-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log review info
+        run: |
+          echo "=== PR REVIEW TRIGGER ==="
+          echo "Event: ${{ github.event_name }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Reviewer: ${{ github.event.review.user.login }}"
+          echo "Review state: ${{ github.event.review.state }}"
+          echo "Review body: ${{ github.event.review.body }}"
+          echo "PR title: ${{ github.event.pull_request.title }}"
+          echo "Secret present: ${{ secrets.FAKE_SECRET != '' && 'YES' || 'NO' }}"
+          echo "========================="

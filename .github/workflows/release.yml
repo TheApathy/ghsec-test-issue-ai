@@ -1,0 +1,20 @@
+name: Vector - Release Trigger
+on:
+  release:
+    types: [published, edited]
+
+jobs:
+  process-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log release info
+        run: |
+          echo "=== RELEASE TRIGGER ==="
+          echo "Event: ${{ github.event_name }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Release name: ${{ github.event.release.name }}"
+          echo "Release body: ${{ github.event.release.body }}"
+          echo "Tag: ${{ github.event.release.tag_name }}"
+          echo "Secret present: ${{ secrets.FAKE_SECRET != '' && 'YES' || 'NO' }}"
+          echo "======================="

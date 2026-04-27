@@ -1,0 +1,19 @@
+name: Vector - Label Trigger
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  process-label:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log label info
+        run: |
+          echo "=== LABEL TRIGGER ==="
+          echo "Event: ${{ github.event_name }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Label: ${{ github.event.label.name }}"
+          echo "Issue title: ${{ github.event.issue.title }}"
+          echo "Secret present: ${{ secrets.FAKE_SECRET != '' && 'YES' || 'NO' }}"
+          echo "====================="

@@ -1,0 +1,20 @@
+name: Vector - PR Review Comment Trigger
+on:
+  pull_request_review_comment:
+    types: [created, edited]
+
+jobs:
+  process-review-comment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log review comment info
+        run: |
+          echo "=== PR REVIEW COMMENT TRIGGER ==="
+          echo "Event: ${{ github.event_name }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Comment body: ${{ github.event.comment.body }}"
+          echo "Path: ${{ github.event.comment.path }}"
+          echo "PR title: ${{ github.event.pull_request.title }}"
+          echo "Secret present: ${{ secrets.FAKE_SECRET != '' && 'YES' || 'NO' }}"
+          echo "=================================="
